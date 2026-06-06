@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import ChatContainer from './components/ChatContainer';
 import MessageBubble from './components/MessageBubble';
 import InputArea from './components/InputArea';
+import WeatherCard from './components/WeatherCard';
+import NewsCard from './components/NewsCard';
 
 function App() {
   const [messages, setMessages] = useState([
@@ -23,11 +25,12 @@ function App() {
     })
     .then(response => response.json())
     .then(data => {
-      const replyText = data.reply || data.error || "Maaf, terjadi kesalahan.";
       const newAiMessage = { 
         id: Date.now() + 1, 
-        text: replyText, 
-        isUser: false 
+        isUser: false,
+        type: data.type || 'text',
+        text: data.text || data.reply || "Maaf, format balasan tidak dikenali.",
+        payload: data.data
       };
       setMessages((prev) => [...prev, newAiMessage]);
     })
@@ -49,14 +52,29 @@ function App() {
     <div className="vh-100 d-flex flex-column bg-light font-sans">
       <header className="bg-white p-3 border-bottom shadow-sm text-center sticky-top">
         <h5 className="mb-0 text-primary fw-bold">
-          <i className="bi bi-robot me-2"></i> React AI Chatbot
+          <i className="bi bi-robot me-2"></i> Aiko.AI
         </h5>
       </header>
       
       <ChatContainer>
-        {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg.text} isUser={msg.isUser} />
-        ))}
+        {messages.map((msg) => {
+          if (msg.isUser || msg.type === 'text' || !msg.type) {
+            return <MessageBubble key={msg.id} message={msg.text} isUser={msg.isUser} />;
+          } else if (msg.type === 'weather') {
+            return (
+              <div key={msg.id} className="d-flex mb-3 justify-content-start">
+                <WeatherCard data={msg.payload} />
+              </div>
+            );
+          } else if (msg.type === 'news') {
+            return (
+              <div key={msg.id} className="d-flex mb-3 justify-content-start">
+                <NewsCard data={msg.payload} />
+              </div>
+            );
+          }
+          return null;
+        })}
         {isTyping && (
           <MessageBubble 
             key="typing" 
