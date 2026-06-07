@@ -1,16 +1,65 @@
-# React + Vite
+# 🤖 Aiko AI - Smart Assistant Chatbot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aiko adalah asisten *chatbot* berbasis kecerdasan buatan (Google Gemini) yang cerdas, interaktif, dan dilengkapi dengan banyak kemampuan layaknya agen multi-fungsi. Proyek ini memadukan antarmuka *frontend* modern (React + Vite) dengan *backend* yang kuat dan modular (Node.js + Express).
 
-Currently, two official plugins are available:
+## ✨ Fitur Utama (Current Features)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Aiko bukan sekadar bot *chat* biasa. Dia dilengkapi dengan kemampuan *"Double Agent"* dan API terintegrasi untuk menangani tugas-tugas kompleks:
 
-## React Compiler
+1. **💬 Chat Kecerdasan Buatan (AI Assistant)**
+   - Terintegrasi dengan **Google Gemini (3.1-flash-lite)**.
+   - Bisa diajak ngobrol santai, ditanya fakta sejarah, coding, hingga resep masakan.
+   
+2. **📥 Multi-Platform Media Downloader**
+   - Mendukung pengunduhan Video, Reels, Foto, dan Carousel dari berbagai platform:
+     - **YouTube**
+     - **TikTok**
+     - **Instagram**
+     - **Twitter (X)**
+     - **Facebook**
+   - Menggunakan sistem **Double Agent** (`yt-dlp` untuk video & `gallery-dl` untuk foto/carousel) secara bersamaan!
+   - Bisa *bypass* link `/share/` yang diblokir, meng-otomatisasi *login cookies* untuk keamanan *download*.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. **🌤️ Info Cuaca Real-time (Weather Fetcher)**
+   - Integrasi API **OpenWeather**.
+   - Cukup ketik "Cuaca di [Nama Kota]", Aiko akan memberikan data cuaca lengkap hari ini beserta ramalan suhu besok.
 
-## Expanding the ESLint configuration
+4. **📰 Agregator Berita Terkini (News Fetcher)**
+   - Integrasi API **Google News RSS**.
+   - Minta berita dengan topik apa saja (misal: "Berita 3 teknologi terbaru"), Aiko akan mencarikan artikel beserta tautan resminya.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+5. **🗜️ Utilitas File (Compressor & Converter)**
+   - **Image Compressor**: Kompres ukuran file gambar (JPG/PNG/WEBP).
+   - **PDF Compressor**: Integrasi iLovePDF API untuk memperkecil ukuran file PDF.
+   
+## 🏗️ Arsitektur Proyek (MVC Pattern)
+
+Baru saja direfaktor! Backend Aiko kini menggunakan arsitektur **MVC (Model-View-Controller)** yang sangat bersih dan mudah dikembangkan:
+
+```text
+Chatbot/
+├── controllers/          # Mengatur logika utama rute (Chat, Download, Compress)
+├── services/             # Otak utama penarik API (Weather, News, Gemini)
+├── routes/               # Penjaga gerbang API Express (Router)
+├── downloads/            # Folder transit sementara media
+├── temp_compress/        # Folder transit sementara kompresi
+├── src/                  # (Frontend) React UI & Components
+└── server.js             # Entry-point Node.js Server
+```
+
+## 🚀 Cara Menjalankan Secara Lokal
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+2. **Jalankan Backend Server** (Port 5000)
+   ```bash
+   npm run server
+   ```
+3. **Jalankan Frontend React**
+   ```bash
+   npm run dev
+   ```
+
+*Dibuat dengan ❤️ dan kecerdasan buatan.*
