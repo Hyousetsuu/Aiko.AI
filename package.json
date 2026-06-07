@@ -12,15 +12,23 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@ilovepdf/ilovepdf-nodejs": "^0.3.1",
+    "archiver": "^8.0.0",
+    "axios": "^1.17.0",
     "bootstrap": "^5.3.8",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "instagram-url-direct": "^2.0.7",
+    "multer": "^2.1.1",
+    "pdf-lib": "^1.17.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
-    "rss-parser": "^3.13.0"
+    "rss-parser": "^3.13.0",
+    "sharp": "^0.34.5",
+    "youtube-dl-exec": "^3.1.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

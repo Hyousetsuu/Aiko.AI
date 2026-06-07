@@ -1,0 +1,139 @@
+:root {
+  --bg-body: #14151a;
+  --bg-container: #1c1d22;
+  --bg-ai-bubble: #25262b;
+  --accent-primary: #9b51e0;
+  --accent-primary-hover: #8646c2;
+  --text-light: #e0e0e0;
+  --text-white: #ffffff;
+  --text-muted: #8b8d96;
+}
+
+body {
+  background-color: var(--bg-body) !important;
+  color: var(--text-light) !important;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #3a3b40;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4f5159;
+}
+
+/* Custom Overrides for Bootstrap Classes */
+.bg-light, .bg-white {
+  background-color: transparent !important;
+}
+
+.text-dark {
+  color: var(--text-light) !important;
+}
+
+/* Chat Container Specific */
+.miruro-container {
+  background-color: var(--bg-container);
+  border-radius: 16px;
+  border: none !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.miruro-header {
+  background-color: var(--bg-container) !important;
+  border-bottom: 1px solid #2a2b30 !important;
+}
+
+.miruro-input-area {
+  background-color: var(--bg-container) !important;
+  border-top: 1px solid #2a2b30 !important;
+}
+
+.miruro-input {
+  background-color: #25262b !important;
+  color: var(--text-white) !important;
+  border: none !important;
+}
+.miruro-input:focus {
+  box-shadow: 0 0 0 2px var(--accent-primary) !important;
+}
+.miruro-input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.miruro-select {
+  background-color: #25262b !important;
+  color: var(--text-white) !important;
+  border: none !important;
+}
+
+/* Bubbles */
+.miruro-ai-bubble {
+  background-color: var(--bg-ai-bubble) !important;
+  color: var(--text-light) !important;
+  border: none !important;
+}
+
+.miruro-user-bubble {
+  background-color: var(--accent-primary) !important;
+  color: var(--text-white) !important;
+  font-weight: 500;
+  border: none !important;
+}
+
+/* Buttons */
+.btn-primary, .btn-success {
+  background-color: var(--accent-primary) !important;
+  border-color: var(--accent-primary) !important;
+  color: var(--text-white) !important;
+  font-weight: 600;
+}
+.btn-primary:hover, .btn-success:hover {
+  background-color: var(--accent-primary-hover) !important;
+  border-color: var(--accent-primary-hover) !important;
+}
+.btn-outline-secondary {
+  color: var(--text-muted) !important;
+  border-color: #3a3b40 !important;
+}
+.btn-outline-secondary:hover {
+  background-color: #2a2b30 !important;
+  color: var(--text-light) !important;
+}
+
+/* Specific elements */
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+  border: 1px solid rgba(220, 53, 69, 0.3) !important;
+  color: #ff6b6b !important;
+}
+
+.badge.bg-light {
+  background-color: rgba(155, 81, 224, 0.15) !important;
+  color: var(--accent-primary) !important;
+}
+
+/* Markdown styling inside AI bubble */
+.miruro-ai-bubble a {
+  color: var(--accent-primary) !important;
+}
+.miruro-ai-bubble code {
+  background-color: #1a1b1f;
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: #ff7b72;
+}
+.miruro-ai-bubble pre {
+  background-color: #14151a;
+  padding: 10px;
+  border-radius: 8px;
+}
