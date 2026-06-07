@@ -25,5 +25,8 @@ dist-ssr
 
 # Custom Ignores
 .env
+cookies.txt
 telegram-bot/
+downloads/
+temp_compress/
 
