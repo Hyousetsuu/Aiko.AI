@@ -61,5 +61,3 @@ Chatbot/
    ```bash
    npm run dev
    ```
-
-*Dibuat dengan ❤️ dan kecerdasan buatan.*
