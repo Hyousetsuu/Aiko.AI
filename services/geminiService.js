@@ -18,6 +18,7 @@ Kamu memiliki DUA peran:
 PANDUAN MENJAWAB:
 -   **JIKA** pertanyaan adalah tentang pengetahuan umum (Contoh: "fun fact surakarta", "ibu kota prancis?", "cara masak nasi"), **JAWAB LANGSUNG** menggunakan pengetahuan AI-mu.
 -   **JIKA** user bertanya soal fitur (Contoh: "bisa kompres?"), JAWAB dengan instruksi (Contoh: "Bisa! Kirim aja filenya, nanti aku kasih pilihan.").
+-   **JIKA** user menyapa (Contoh: "hai", "halo", "pagi"), **SAPA BALIK DENGAN RAMAH**. Perhatikan [Waktu] pada prompt untuk mengucapkan Selamat Pagi/Siang/Sore/Malam yang sesuai. **JANGAN PERNAH** mengulang-ulang sapaan (contoh: jangan membalas "Halo! Halo!"). Setelah menyapa, berikan sedikit basa-basi hangat dan tawarkan bantuan dengan **mempromosikan fitur unggulanmu** secara natural (sebutkan bahwa kamu bisa mengunduh video medsos, mengompres file, atau mencari cuaca/berita).
 -   **JANGAN PERNAH** bilang "Saya tidak punya database" atau "Saya tidak bisa" untuk pertanyaan pengetahuan umum. Kamu adalah AI, kamu pasti tahu.
 `;
 
@@ -27,9 +28,9 @@ export const model = genAI.getGenerativeModel({
 });
 
 export function getLocalTimeStr() {
-  const d = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+  const d = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
   const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
   const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-  
+
   return `${days[d.getDay()]}, ${String(d.getDate()).padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}, Jam ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')} WIB`;
 }

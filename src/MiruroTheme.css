@@ -1,18 +1,26 @@
 :root {
-  --bg-body: #14151a;
-  --bg-container: #1c1d22;
-  --bg-ai-bubble: #25262b;
+  --bg-body: #0d0e12;
+  --bg-container: rgba(24, 25, 30, 0.65);
+  --bg-ai-bubble: rgba(36, 38, 43, 0.85);
   --accent-primary: #9b51e0;
+  --accent-secondary: #c27dff;
   --accent-primary-hover: #8646c2;
   --text-light: #e0e0e0;
   --text-white: #ffffff;
   --text-muted: #8b8d96;
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 body {
   background-color: var(--bg-body) !important;
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(155, 81, 224, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(86, 114, 255, 0.1) 0%, transparent 40%) !important;
+  background-attachment: fixed;
   color: var(--text-light) !important;
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  height: 100vh;
 }
 
 /* Scrollbar Customization */
@@ -24,11 +32,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3a3b40;
+  background: rgba(139, 141, 150, 0.3);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4f5159;
+  background: rgba(139, 141, 150, 0.6);
 }
 
 /* Custom Overrides for Bootstrap Classes */
@@ -40,100 +48,212 @@ body {
   color: var(--text-light) !important;
 }
 
-/* Chat Container Specific */
+/* Chat Container Specific (Glassmorphism) */
 .miruro-container {
-  background-color: var(--bg-container);
-  border-radius: 16px;
-  border: none !important;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  background: var(--bg-container);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
 }
 
 .miruro-header {
-  background-color: var(--bg-container) !important;
-  border-bottom: 1px solid #2a2b30 !important;
+  background: rgba(24, 25, 30, 0.4) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border) !important;
 }
 
+/* Header Badge & Title Animation */
+.miruro-header h5 {
+  background: linear-gradient(135deg, #fff, #c27dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.miruro-header .badge {
+  background: linear-gradient(135deg, rgba(155, 81, 224, 0.2), rgba(155, 81, 224, 0.05)) !important;
+  border: 1px solid rgba(155, 81, 224, 0.3);
+  box-shadow: 0 0 10px rgba(155, 81, 224, 0.2);
+  color: var(--accent-secondary) !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Input Area */
 .miruro-input-area {
-  background-color: var(--bg-container) !important;
-  border-top: 1px solid #2a2b30 !important;
+  background: rgba(24, 25, 30, 0.5) !important;
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--glass-border) !important;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .miruro-input {
-  background-color: #25262b !important;
+  background-color: rgba(0, 0, 0, 0.2) !important;
   color: var(--text-white) !important;
-  border: none !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px !important;
+  padding: 0.8rem 1.2rem;
+  transition: all 0.3s ease !important;
 }
 .miruro-input:focus {
-  box-shadow: 0 0 0 2px var(--accent-primary) !important;
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(155, 81, 224, 0.4) !important;
+  border-color: var(--accent-primary) !important;
 }
 .miruro-input::placeholder {
   color: var(--text-muted) !important;
 }
 
 .miruro-select {
-  background-color: #25262b !important;
+  background-color: rgba(0, 0, 0, 0.2) !important;
   color: var(--text-white) !important;
-  border: none !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px !important;
 }
 
 /* Bubbles */
 .miruro-ai-bubble {
-  background-color: var(--bg-ai-bubble) !important;
+  background: var(--bg-ai-bubble) !important;
   color: var(--text-light) !important;
-  border: none !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 20px !important;
+  border-bottom-left-radius: 4px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.miruro-ai-bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .miruro-user-bubble {
-  background-color: var(--accent-primary) !important;
+  background: linear-gradient(135deg, var(--accent-primary), #7434b0) !important;
   color: var(--text-white) !important;
   font-weight: 500;
-  border: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 6px 20px rgba(155, 81, 224, 0.25);
+  border-radius: 20px !important;
+  border-bottom-right-radius: 4px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.miruro-user-bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(155, 81, 224, 0.35);
 }
 
 /* Buttons */
 .btn-primary, .btn-success {
-  background-color: var(--accent-primary) !important;
-  border-color: var(--accent-primary) !important;
+  background: linear-gradient(135deg, var(--accent-primary), #8646c2) !important;
+  border: none !important;
   color: var(--text-white) !important;
   font-weight: 600;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(155, 81, 224, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 .btn-primary:hover, .btn-success:hover {
-  background-color: var(--accent-primary-hover) !important;
-  border-color: var(--accent-primary-hover) !important;
+  background: linear-gradient(135deg, #a561e8, #924dcc) !important;
+  box-shadow: 0 6px 20px rgba(155, 81, 224, 0.5);
+  transform: translateY(-2px);
 }
+.btn-primary:active, .btn-success:active {
+  transform: translateY(0);
+}
+
 .btn-outline-secondary {
-  color: var(--text-muted) !important;
-  border-color: #3a3b40 !important;
+  color: var(--text-light) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px;
+  transition: all 0.3s ease !important;
 }
 .btn-outline-secondary:hover {
-  background-color: #2a2b30 !important;
-  color: var(--text-light) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-white) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px);
 }
 
 /* Specific elements */
 .alert-danger {
   background-color: rgba(220, 53, 69, 0.1) !important;
   border: 1px solid rgba(220, 53, 69, 0.3) !important;
-  color: #ff6b6b !important;
-}
-
-.badge.bg-light {
-  background-color: rgba(155, 81, 224, 0.15) !important;
-  color: var(--accent-primary) !important;
+  color: #ff8a8a !important;
+  border-radius: 8px;
 }
 
 /* Markdown styling inside AI bubble */
-.miruro-ai-bubble a {
-  color: var(--accent-primary) !important;
+.miruro-ai-bubble a:not(.btn) {
+  color: var(--accent-secondary) !important;
+  text-decoration: none !important;
+  border-bottom: 1px dashed var(--accent-secondary);
+  transition: all 0.2s ease;
+}
+.miruro-ai-bubble a:not(.btn):hover {
+  color: #d8aaff !important;
+  border-bottom: 1px solid #d8aaff;
 }
 .miruro-ai-bubble code {
-  background-color: #1a1b1f;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #ff7b72;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 3px 6px;
+  border-radius: 6px;
+  color: #ff8a8a;
+  font-family: 'Fira Code', 'Courier New', Courier, monospace;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .miruro-ai-bubble pre {
-  background-color: #14151a;
-  padding: 10px;
-  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
+.miruro-ai-bubble pre code {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  color: var(--text-light);
+}
+
+/* Input Area Fixes */
+.input-group > .miruro-input {
+  border-radius: 25px 0 0 25px !important;
+}
+.input-group > .btn-primary {
+  border-radius: 0 25px 25px 0 !important;
+  margin-left: 0 !important;
+}
+
+.miruro-action-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: rotate(90deg);
+  transition: transform 0.3s ease, background 0.2s ease;
+}
+.miruro-action-btn {
+  transition: transform 0.3s ease, background 0.2s ease;
+}
+
+.miruro-input:focus {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.input-group:focus-within {
+  box-shadow: 0 0 0 2px rgba(155, 81, 224, 0.5) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+/* Dropdown Customization */
+.miruro-dropdown-item {
+  transition: all 0.2s ease;
+}
+.miruro-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+

@@ -51,10 +51,31 @@ const MessageBubble = ({ message, isUser, onMediaResult }) => {
     }
   };
 
+  const Avatar = ({ isUser }) => (
+    <div 
+      className={`rounded-circle d-flex flex-shrink-0 align-items-center justify-content-center text-white shadow-sm ${isUser ? '' : ''}`} 
+      style={{ 
+        width: '38px', 
+        height: '38px', 
+        overflow: 'hidden',
+        background: isUser ? 'linear-gradient(135deg, var(--accent-primary), #7434b0)' : 'transparent',
+        border: '1px solid rgba(255,255,255,0.1)'
+      }}
+    >
+      {isUser ? (
+        <i className="bi bi-person-fill fs-5"></i>
+      ) : (
+        <img src="/profile.jpg" alt="AI Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      )}
+    </div>
+  );
+
   return (
-    <div className={`d-flex mb-3 ${isUser ? 'justify-content-end' : 'justify-content-start'}`}>
+    <div className={`d-flex mb-4 align-items-end ${isUser ? 'justify-content-end' : 'justify-content-start'}`}>
+      {!isUser && <Avatar isUser={false} />}
+      
       <div 
-        className={`p-3 rounded-4 shadow-sm ${isUser ? 'miruro-user-bubble' : 'miruro-ai-bubble'}`}
+        className={`position-relative p-3 shadow-sm ${isUser ? 'miruro-user-bubble ms-4 me-2' : 'miruro-ai-bubble ms-2 me-4'}`}
         style={{ maxWidth: '75%', wordBreak: 'break-word' }}
       >
         {typeof message === 'string' ? (
@@ -132,8 +153,11 @@ const MessageBubble = ({ message, isUser, onMediaResult }) => {
           message
         )}
       </div>
+
+      {isUser && <Avatar isUser={true} />}
     </div>
   );
 };
 
 export default MessageBubble;
+

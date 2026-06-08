@@ -6,8 +6,18 @@ import WeatherCard from './components/WeatherCard';
 import NewsCard from './components/NewsCard';
 
 function App() {
+  const getInitialGreeting = () => {
+    const hour = new Date().getHours();
+    let timeGreeting = "Selamat malam";
+    if (hour >= 4 && hour < 11) timeGreeting = "Selamat pagi";
+    else if (hour >= 11 && hour < 15) timeGreeting = "Selamat siang";
+    else if (hour >= 15 && hour < 18) timeGreeting = "Selamat sore";
+
+    return `Halo, ${timeGreeting}! 👋 Saya **Aiko**, asisten virtual cerdas Anda.\n\nSaya siap menemani dan membantu Anda hari ini. Anda bisa bertanya tentang apa saja, atau mencoba fitur-fitur unggulan saya seperti:\n- 📥 Mengunduh video dari sosial media\n- 🗜️ Mengompres ukuran file gambar/PDF\n- 🌤️ Mengecek prakiraan cuaca\n- 📰 Membaca berita terbaru\n\nAda yang bisa saya bantu sekarang?`;
+  };
+
   const [messages, setMessages] = useState([
-    { id: 1, text: "Halo! Saya adalah asisten virtual Anda. Ada yang bisa saya bantu hari ini?", isUser: false }
+    { id: 1, text: getInitialGreeting(), isUser: false }
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -159,7 +169,7 @@ function App() {
                 <div className="spinner-border spinner-border-sm text-primary me-2" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
-                <span className="text-muted fst-italic">AI sedang berpikir...</span>
+                <span className="text-light opacity-75 fst-italic">AI sedang berpikir...</span>
               </div>
             } 
             isUser={false} 
