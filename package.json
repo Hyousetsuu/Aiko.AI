@@ -22,6 +22,7 @@
     "instagram-url-direct": "^2.0.7",
     "multer": "^2.1.1",
     "pdf-lib": "^1.17.1",
+    "pdf-parse": "^2.4.5",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-markdown": "^10.1.0",

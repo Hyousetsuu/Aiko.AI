@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 const InputArea = ({ onSendMessage, onSendFile }) => {
   const [inputText, setInputText] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedAction, setSelectedAction] = useState('compress');
+  const [selectedAction, setSelectedAction] = useState('chat');
   const [selectedQuality, setSelectedQuality] = useState('50');
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
@@ -11,7 +11,13 @@ const InputArea = ({ onSendMessage, onSendFile }) => {
   const handleSend = (e) => {
     e.preventDefault();
     if (selectedFile) {
-      onSendFile(selectedFile, selectedAction, selectedQuality);
+      if (selectedAction === 'chat') {
+        onSendFile(selectedFile, selectedAction, inputText.trim());
+        setInputText('');
+        if (textareaRef.current) textareaRef.current.style.height = 'auto';
+      } else {
+        onSendFile(selectedFile, selectedAction, selectedQuality);
+      }
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
     } else if (inputText.trim()) {
@@ -39,11 +45,12 @@ const InputArea = ({ onSendMessage, onSendFile }) => {
             
             <select 
               className="form-select form-select-sm bg-dark text-white border-secondary rounded-pill me-2" 
-              style={{ width: '90px', fontSize: '0.8rem' }}
+              style={{ width: '95px', fontSize: '0.8rem' }}
               value={selectedAction}
               onChange={(e) => setSelectedAction(e.target.value)}
               title="Aksi"
             >
+              <option value="chat">Tanya AI</option>
               <option value="compress">Kompresi</option>
               <option value="convert">Konversi</option>
             </select>
@@ -138,7 +145,7 @@ const InputArea = ({ onSendMessage, onSendFile }) => {
                 handleSend(e);
               }
             }}
-            disabled={selectedFile !== null}
+            disabled={selectedFile !== null && selectedAction !== 'chat'}
           />
           <button 
             type="submit" 

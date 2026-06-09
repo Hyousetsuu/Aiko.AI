@@ -21,17 +21,23 @@ function App() {
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
-  const handleSendFile = (file, action, quality) => {
+  const handleSendFile = (file, action, arg3) => {
     let localUrl = null;
     if (file.type.startsWith('image/')) {
       localUrl = URL.createObjectURL(file);
     }
     
-    const actionText = action === 'convert' ? 'konversi' : `kompresi (Kualitas ${quality}%)`;
+    let textStr = "";
+    if (action === 'chat') {
+      textStr = arg3 ? `Mengunggah file ${file.name} dan bertanya: "${arg3}"` : `Tolong rangkum/analisa file ${file.name}`;
+    } else {
+      const actionText = action === 'convert' ? 'konversi' : `kompresi (Kualitas ${arg3}%)`;
+      textStr = `Meminta ${actionText} file: ${file.name}`;
+    }
     
     const newUserMessage = { 
       id: Date.now(), 
-      text: `Meminta ${actionText} file: ${file.name}`, 
+      text: textStr, 
       isUser: true,
       type: localUrl ? 'image' : 'text',
       fileUrl: localUrl
@@ -42,10 +48,13 @@ function App() {
     const formData = new FormData();
     formData.append('file', file);
     if (action === 'compress') {
-      formData.append('quality', quality);
+      formData.append('quality', arg3);
+    } else if (action === 'chat') {
+      formData.append('message', arg3);
     }
 
-    const endpoint = action === 'convert' ? 'http://localhost:5000/api/convert' : 'http://localhost:5000/api/compress';
+    const endpoint = action === 'chat' ? 'http://localhost:5000/api/chat-file' : 
+                     (action === 'convert' ? 'http://localhost:5000/api/convert' : 'http://localhost:5000/api/compress');
 
     fetch(endpoint, {
       method: 'POST',
@@ -61,6 +70,11 @@ function App() {
           // ignore
         }
         throw new Error(errMessage);
+      }
+      
+      if (action === 'chat') {
+        const data = await response.json();
+        return { isChat: true, data };
       }
       
       let filename = `${action === 'convert' ? 'converted' : 'compressed'}_${file.name}`;
@@ -80,20 +94,32 @@ function App() {
       }
       
       const blob = await response.blob();
-      return { blob, filename };
+      return { isChat: false, blob, filename };
     })
-    .then(({ blob, filename }) => {
-      const mediaUrl = window.URL.createObjectURL(blob);
-      
-      const newAiMessage = { 
-        id: Date.now() + 1, 
-        isUser: false,
-        type: 'media_result',
-        mediaUrl: mediaUrl,
-        mimeType: blob.type,
-        fileName: filename
-      };
-      setMessages((prev) => [...prev, newAiMessage]);
+    .then(resData => {
+      if (resData.isChat) {
+        const newAiMessage = { 
+          id: Date.now() + 1, 
+          isUser: false,
+          type: resData.data.type || 'text',
+          text: resData.data.text || resData.data.reply || "Maaf, format balasan tidak dikenali.",
+          payload: resData.data.data
+        };
+        setMessages((prev) => [...prev, newAiMessage]);
+      } else {
+        const { blob, filename } = resData;
+        const mediaUrl = window.URL.createObjectURL(blob);
+        
+        const newAiMessage = { 
+          id: Date.now() + 1, 
+          isUser: false,
+          type: 'media_result',
+          mediaUrl: mediaUrl,
+          mimeType: blob.type,
+          fileName: filename
+        };
+        setMessages((prev) => [...prev, newAiMessage]);
+      }
     })
     .catch(error => {
       console.error("Process Error:", error);
