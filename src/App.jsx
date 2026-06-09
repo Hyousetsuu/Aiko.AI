@@ -21,15 +21,17 @@ function App() {
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
-  const handleSendFile = (file, quality) => {
+  const handleSendFile = (file, action, quality) => {
     let localUrl = null;
     if (file.type.startsWith('image/')) {
       localUrl = URL.createObjectURL(file);
     }
     
+    const actionText = action === 'convert' ? 'konversi' : `kompresi (Kualitas ${quality}%)`;
+    
     const newUserMessage = { 
       id: Date.now(), 
-      text: `Meminta kompresi gambar: ${file.name} (Kualitas ${quality}%)`, 
+      text: `Meminta ${actionText} file: ${file.name}`, 
       isUser: true,
       type: localUrl ? 'image' : 'text',
       fileUrl: localUrl
@@ -39,9 +41,13 @@ function App() {
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('quality', quality);
+    if (action === 'compress') {
+      formData.append('quality', quality);
+    }
 
-    fetch('http://localhost:5000/api/compress', {
+    const endpoint = action === 'convert' ? 'http://localhost:5000/api/convert' : 'http://localhost:5000/api/compress';
+
+    fetch(endpoint, {
       method: 'POST',
       body: formData
     })
@@ -56,11 +62,28 @@ function App() {
         }
         throw new Error(errMessage);
       }
-      return response.blob();
+      
+      let filename = `${action === 'convert' ? 'converted' : 'compressed'}_${file.name}`;
+      const disposition = response.headers.get('content-disposition');
+      if (disposition && disposition.indexOf('attachment') !== -1) {
+        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        const matches = filenameRegex.exec(disposition);
+        if (matches != null && matches[1]) { 
+          filename = matches[1].replace(/['"]/g, '');
+        }
+      } else if (action === 'convert') {
+        if (file.type.startsWith('image/')) {
+          filename = filename.replace(/\.[^/.]+$/, "") + ".pdf";
+        } else if (file.type === 'application/pdf') {
+          filename = filename.replace(/\.[^/.]+$/, "") + ".zip";
+        }
+      }
+      
+      const blob = await response.blob();
+      return { blob, filename };
     })
-    .then(blob => {
+    .then(({ blob, filename }) => {
       const mediaUrl = window.URL.createObjectURL(blob);
-      let filename = `compressed_${file.name}`;
       
       const newAiMessage = { 
         id: Date.now() + 1, 
@@ -73,12 +96,12 @@ function App() {
       setMessages((prev) => [...prev, newAiMessage]);
     })
     .catch(error => {
-      console.error("Compress Error:", error);
+      console.error("Process Error:", error);
       const newAiMessage = { 
         id: Date.now() + 1, 
         isUser: false,
         type: 'text',
-        text: `❌ Gagal mengompres: ${error.message}`
+        text: `❌ Gagal memproses file: ${error.message}`
       };
       setMessages((prev) => [...prev, newAiMessage]);
     })

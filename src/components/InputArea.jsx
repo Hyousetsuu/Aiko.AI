@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 const InputArea = ({ onSendMessage, onSendFile }) => {
   const [inputText, setInputText] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedAction, setSelectedAction] = useState('compress');
   const [selectedQuality, setSelectedQuality] = useState('50');
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
@@ -10,7 +11,7 @@ const InputArea = ({ onSendMessage, onSendFile }) => {
   const handleSend = (e) => {
     e.preventDefault();
     if (selectedFile) {
-      onSendFile(selectedFile, selectedQuality);
+      onSendFile(selectedFile, selectedAction, selectedQuality);
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
     } else if (inputText.trim()) {
@@ -34,19 +35,32 @@ const InputArea = ({ onSendMessage, onSendFile }) => {
         <div className="container-md mb-3 ps-5">
           <div className="badge bg-secondary d-flex align-items-center py-2 px-3 shadow-sm border rounded-pill" style={{ width: 'fit-content', background: 'rgba(255,255,255,0.1)' }}>
             <i className="bi bi-file-earmark-check-fill me-2 text-success fs-5"></i>
-            <span className="me-2">File: <strong>{selectedFile.name}</strong></span>
+            <span className="me-2 text-truncate" style={{maxWidth: '120px'}}>File: <strong>{selectedFile.name}</strong></span>
             
             <select 
               className="form-select form-select-sm bg-dark text-white border-secondary rounded-pill me-2" 
-              style={{ width: '80px', fontSize: '0.8rem' }}
-              value={selectedQuality}
-              onChange={(e) => setSelectedQuality(e.target.value)}
-              title="Kualitas Kompresi"
+              style={{ width: '90px', fontSize: '0.8rem' }}
+              value={selectedAction}
+              onChange={(e) => setSelectedAction(e.target.value)}
+              title="Aksi"
             >
-              <option value="25">25%</option>
-              <option value="50">50%</option>
-              <option value="75">75%</option>
+              <option value="compress">Kompresi</option>
+              <option value="convert">Konversi</option>
             </select>
+
+            {selectedAction === 'compress' && (
+              <select 
+                className="form-select form-select-sm bg-dark text-white border-secondary rounded-pill me-2" 
+                style={{ width: '80px', fontSize: '0.8rem' }}
+                value={selectedQuality}
+                onChange={(e) => setSelectedQuality(e.target.value)}
+                title="Kualitas Kompresi"
+              >
+                <option value="25">25%</option>
+                <option value="50">50%</option>
+                <option value="75">75%</option>
+              </select>
+            )}
 
             <button 
               type="button" 

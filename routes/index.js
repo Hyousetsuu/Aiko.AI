@@ -4,6 +4,7 @@ import path from 'path';
 import { handleChat } from '../controllers/chatController.js';
 import { handleDownload } from '../controllers/downloadController.js';
 import { handleCompress } from '../controllers/compressController.js';
+import { handleConvert } from '../controllers/convertController.js';
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ const upload = multer({ dest: tempCompress, limits: { fileSize: 200 * 1024 * 102
 router.post('/chat', handleChat);
 router.post('/download', handleDownload);
 router.post('/compress', upload.single('file'), handleCompress);
+router.post('/convert', upload.single('file'), handleConvert);
 
 export default router;
