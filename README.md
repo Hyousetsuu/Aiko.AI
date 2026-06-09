@@ -29,20 +29,26 @@ Aiko bukan sekadar bot *chat* biasa. Dia dilengkapi dengan kemampuan *"Double Ag
    - Minta berita dengan topik apa saja (misal: "Berita 3 teknologi terbaru"), Aiko akan mencarikan artikel beserta tautan resminya.
 
 5. **🗜️ Utilitas File (Compressor & Converter)**
-   - **Image Compressor**: Kompres ukuran file gambar (JPG/PNG/WEBP).
-   - **PDF Compressor**: Integrasi iLovePDF API untuk memperkecil ukuran file PDF.
-   
+   - **Image Compressor**: Kompres ukuran file gambar (JPG/PNG/WEBP) secara *offline*.
+   - **PDF Compressor**: Integrasi API iLovePDF untuk memperkecil ukuran file PDF.
+   - **Image to PDF**: Konversi gambar menjadi format PDF.
+   - **PDF to Image**: Ekstraksi halaman dari dokumen PDF menjadi gambar beresolusi tinggi.
+
+6. **📄 Tanya Dokumen (PDF/TXT Q&A)**
+   - Aiko bisa membaca isi dokumen seperti `.pdf`, `.txt`, `.md`, dan mendiskusikannya!
+   - Pengolahan ekstrak teks dilakukan secara *offline* di *backend* agar tidak membebani kuota API.
+
 ## 🏗️ Arsitektur Proyek (MVC Pattern)
 
 Baru saja direfaktor! Backend Aiko kini menggunakan arsitektur **MVC (Model-View-Controller)** yang sangat bersih dan mudah dikembangkan:
 
 ```text
 Chatbot/
-├── controllers/          # Mengatur logika utama rute (Chat, Download, Compress)
+├── controllers/          # Mengatur logika utama rute (Chat, Download, Compress, Convert, File Chat)
 ├── services/             # Otak utama penarik API (Weather, News, Gemini)
 ├── routes/               # Penjaga gerbang API Express (Router)
 ├── downloads/            # Folder transit sementara media
-├── temp_compress/        # Folder transit sementara kompresi
+├── temp_compress/        # Folder transit sementara kompresi/konversi
 ├── src/                  # (Frontend) React UI & Components
 └── server.js             # Entry-point Node.js Server
 ```
