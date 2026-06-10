@@ -51,8 +51,8 @@ body {
 /* Chat Container Specific (Glassmorphism) */
 .miruro-container {
   background: var(--bg-container);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   border-radius: 20px;
   border: 1px solid var(--glass-border) !important;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -118,7 +118,9 @@ body {
 
 /* Bubbles */
 .miruro-ai-bubble {
-  background: var(--bg-ai-bubble) !important;
+  background: rgba(36, 38, 43, 0.6) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   color: var(--text-light) !important;
   border: 1px solid var(--glass-border) !important;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -133,7 +135,9 @@ body {
 }
 
 .miruro-user-bubble {
-  background: linear-gradient(135deg, var(--accent-primary), #7434b0) !important;
+  background: linear-gradient(135deg, rgba(155, 81, 224, 0.8), rgba(116, 52, 176, 0.8)) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   color: var(--text-white) !important;
   font-weight: 500;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;

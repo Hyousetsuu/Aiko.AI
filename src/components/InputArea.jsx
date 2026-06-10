@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
-const InputArea = ({ onSendMessage, onSendFile }) => {
+const InputArea = ({ onSendMessage, onSendFile, droppedFile, clearDroppedFile }) => {
   const [inputText, setInputText] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedAction, setSelectedAction] = useState('chat');
@@ -8,13 +8,20 @@ const InputArea = ({ onSendMessage, onSendFile }) => {
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
 
+  useEffect(() => {
+    if (droppedFile) {
+      setSelectedFile(droppedFile);
+      if (clearDroppedFile) clearDroppedFile();
+    }
+  }, [droppedFile, clearDroppedFile]);
+
   const handleSend = (e) => {
     e.preventDefault();
     if (selectedFile) {
       if (selectedAction === 'chat') {
         onSendFile(selectedFile, selectedAction, inputText.trim());
         setInputText('');
-        if (textareaRef.current) textareaRef.current.style.height = 'auto';
+        if (textareaRef.current) textareaRef.current.style.height = '44px';
       } else {
         onSendFile(selectedFile, selectedAction, selectedQuality);
       }
@@ -24,7 +31,7 @@ const InputArea = ({ onSendMessage, onSendFile }) => {
       onSendMessage(inputText.trim());
       setInputText('');
       if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height = '44px';
       }
     }
   };
@@ -129,15 +136,24 @@ const InputArea = ({ onSendMessage, onSendFile }) => {
               minHeight: '44px',
               maxHeight: '150px',
               overflowY: 'auto',
-              lineHeight: '1.5'
+              lineHeight: '1.5',
+              transition: 'height 0.15s ease-out'
             }}
             rows={1}
             placeholder="Ketik pesan Anda..."
             value={inputText}
             onChange={(e) => {
               setInputText(e.target.value);
-              e.target.style.height = 'auto';
-              e.target.style.height = Math.min(e.target.scrollHeight, 150) + 'px';
+              const target = e.target;
+              // Nonaktifkan sementara transition agar scrollHeight dihitung dengan benar
+              target.style.transition = 'none';
+              target.style.height = '44px';
+              const newHeight = Math.min(target.scrollHeight, 150);
+              target.style.height = newHeight + 'px';
+              // Paksa browser untuk render ulang (reflow)
+              target.offsetHeight; 
+              // Aktifkan kembali transition
+              target.style.transition = 'height 0.15s ease-out';
             }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {

@@ -1,6 +1,86 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { motion } from 'framer-motion';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const TypingIndicator = () => {
+  return (
+    <div className="d-flex align-items-center" style={{ height: '24px' }}>
+      {[0, 1, 2].map((dot) => (
+        <motion.div
+          key={dot}
+          style={{
+            width: '8px',
+            height: '8px',
+            backgroundColor: 'var(--accent-secondary)',
+            borderRadius: '50%',
+            margin: '0 3px'
+          }}
+          animate={{
+            y: ['0%', '-50%', '0%'],
+            opacity: [0.5, 1, 0.5]
+          }}
+          transition={{
+            duration: 0.8,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: dot * 0.15
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+const CodeBlock = ({ node, inline, className, children, ...props }) => {
+  const match = /language-(\w+)/.exec(className || '');
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  if (!inline && match) {
+    return (
+      <div className="position-relative my-3 shadow-sm rounded-3 overflow-hidden border" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+        <div className="d-flex justify-content-between align-items-center px-3 py-2 bg-dark text-secondary" style={{ fontSize: '0.8rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <span className="text-uppercase fw-bold text-light">{match[1]}</span>
+          <button 
+            onClick={handleCopy} 
+            className="btn btn-sm text-light p-1 d-flex align-items-center flex-shrink-0"
+            style={{ fontSize: '0.8rem', border: 'none', background: 'transparent', whiteSpace: 'nowrap', transition: 'all 0.2s ease' }}
+            onMouseOver={(e) => e.currentTarget.style.color = 'var(--accent-secondary)'}
+            onMouseOut={(e) => e.currentTarget.style.color = ''}
+          >
+            {copied ? (
+              <><i className="bi bi-check2 me-1 text-success"></i> Copied!</>
+            ) : (
+              <><i className="bi bi-clipboard me-1"></i> Copy Code</>
+            )}
+          </button>
+        </div>
+        <SyntaxHighlighter
+          style={vscDarkPlus}
+          language={match[1]}
+          PreTag="div"
+          customStyle={{ margin: 0, borderRadius: '0 0 0.5rem 0.5rem', background: 'rgba(0, 0, 0, 0.4)' }}
+          {...props}
+        >
+          {String(children).replace(/\n$/, '')}
+        </SyntaxHighlighter>
+      </div>
+    );
+  }
+  return (
+    <code className={className} {...props}>
+      {children}
+    </code>
+  );
+};
 
 const MessageBubble = ({ message, isUser, onMediaResult }) => {
   const [isDownloading, setIsDownloading] = useState(false);
@@ -71,14 +151,21 @@ const MessageBubble = ({ message, isUser, onMediaResult }) => {
   );
 
   return (
-    <div className={`d-flex mb-4 align-items-end ${isUser ? 'justify-content-end' : 'justify-content-start'}`}>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className={`d-flex mb-4 align-items-end ${isUser ? 'justify-content-end' : 'justify-content-start'}`}
+    >
       {!isUser && <Avatar isUser={false} />}
       
       <div 
         className={`position-relative p-3 shadow-sm ${isUser ? 'miruro-user-bubble ms-4 me-2' : 'miruro-ai-bubble ms-2 me-4'}`}
         style={{ maxWidth: '75%', wordBreak: 'break-word' }}
       >
-        {typeof message === 'string' ? (
+        {message && message.type === 'typing_indicator' ? (
+          <TypingIndicator />
+        ) : typeof message === 'string' ? (
           <ReactMarkdown 
             remarkPlugins={[remarkGfm]}
             components={{
@@ -88,7 +175,8 @@ const MessageBubble = ({ message, isUser, onMediaResult }) => {
               h1: ({node, ...props}) => <h4 className="fw-bold mt-2 mb-2" {...props} />,
               h2: ({node, ...props}) => <h5 className="fw-bold mt-2 mb-2" {...props} />,
               h3: ({node, ...props}) => <h6 className="fw-bold mt-2 mb-2" {...props} />,
-              a: ({node, ...props}) => <a className="text-decoration-underline fw-bold" style={{color: 'inherit'}} target="_blank" rel="noopener noreferrer" {...props} />
+              a: ({node, ...props}) => <a className="text-decoration-underline fw-bold" style={{color: 'inherit'}} target="_blank" rel="noopener noreferrer" {...props} />,
+              code: CodeBlock
             }}
           >
             {message}
@@ -155,7 +243,7 @@ const MessageBubble = ({ message, isUser, onMediaResult }) => {
       </div>
 
       {isUser && <Avatar isUser={true} />}
-    </div>
+    </motion.div>
   );
 };
 

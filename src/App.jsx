@@ -4,6 +4,7 @@ import MessageBubble from './components/MessageBubble';
 import InputArea from './components/InputArea';
 import WeatherCard from './components/WeatherCard';
 import NewsCard from './components/NewsCard';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
   const getInitialGreeting = () => {
@@ -20,6 +21,21 @@ function App() {
     { id: 1, text: getInitialGreeting(), isUser: false }
   ]);
   const [isTyping, setIsTyping] = useState(false);
+  const [draggedFile, setDraggedFile] = useState(null);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    if (!isDraggingOver) setIsDraggingOver(true);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingOver(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setDraggedFile(e.dataTransfer.files[0]);
+    }
+  };
 
   const handleSendFile = (file, action, arg3) => {
     let localUrl = null;
@@ -178,7 +194,35 @@ function App() {
   };
 
   return (
-    <div className="d-flex flex-column vh-100 pb-3 pt-3 px-3">
+    <div 
+      className="d-flex flex-column vh-100 pb-3 pt-3 px-3 position-relative"
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
+      <AnimatePresence>
+        {isDraggingOver && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center z-3"
+            style={{ background: 'rgba(13, 14, 18, 0.85)', backdropFilter: 'blur(8px)' }}
+            onDragLeave={() => setIsDraggingOver(false)}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleDrop}
+          >
+            <motion.div 
+              animate={{ y: [0, -15, 0] }}
+              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+            >
+              <i className="bi bi-cloud-arrow-up-fill" style={{ fontSize: '6rem', color: 'var(--accent-primary)' }}></i>
+            </motion.div>
+            <h3 className="text-white fw-bold mt-3">Jatuhkan file di sini</h3>
+            <p className="text-light opacity-75">File akan ditambahkan ke area input otomatis</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="d-flex flex-column h-100 miruro-container overflow-hidden">
         <header className="miruro-header text-white py-3 px-4 d-flex justify-content-between align-items-center">
           <h5 className="mb-0 fw-bold"><i className="bi bi-robot me-2"></i>Aiko Bot</h5>
@@ -213,20 +257,18 @@ function App() {
         {isTyping && (
           <MessageBubble 
             key="typing" 
-            message={
-              <div className="d-flex align-items-center">
-                <div className="spinner-border spinner-border-sm text-primary me-2" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                <span className="text-light opacity-75 fst-italic">AI sedang berpikir...</span>
-              </div>
-            } 
+            message={{ type: 'typing_indicator' }}
             isUser={false} 
           />
         )}
       </ChatContainer>
       
-      <InputArea onSendMessage={handleSendMessage} onSendFile={handleSendFile} />
+      <InputArea 
+        onSendMessage={handleSendMessage} 
+        onSendFile={handleSendFile} 
+        droppedFile={draggedFile}
+        clearDroppedFile={() => setDraggedFile(null)}
+      />
       </div>
     </div>
   );
