@@ -46,40 +46,58 @@ const InputArea = ({ onSendMessage, onSendFile, droppedFile, clearDroppedFile })
     <div className="miruro-input-area p-3 pb-4">
       {selectedFile && (
         <div className="container-md mb-3 ps-5">
-          <div className="badge bg-secondary d-flex align-items-center py-2 px-3 shadow-sm border rounded-pill" style={{ width: 'fit-content', background: 'rgba(255,255,255,0.1)' }}>
-            <i className="bi bi-file-earmark-check-fill me-2 text-success fs-5"></i>
-            <span className="me-2 text-truncate" style={{maxWidth: '120px'}}>File: <strong>{selectedFile.name}</strong></span>
+          <div className="d-flex align-items-center py-2 px-3 rounded-pill miruro-file-badge mb-2" style={{ width: 'fit-content' }}>
+            <div className="d-flex align-items-center me-3">
+              <div className="d-flex align-items-center justify-content-center bg-success bg-opacity-25 rounded-circle me-2" style={{ width: '28px', height: '28px' }}>
+                <i className="bi bi-file-earmark-check-fill text-success fs-6"></i>
+              </div>
+              <span className="text-truncate text-light" style={{ maxWidth: '150px', fontSize: '0.9rem' }}>
+                File: <strong className="text-white">{selectedFile.name}</strong>
+              </span>
+            </div>
             
-            <select 
-              className="form-select form-select-sm bg-dark text-white border-secondary rounded-pill me-2" 
-              style={{ width: '95px', fontSize: '0.8rem' }}
-              value={selectedAction}
-              onChange={(e) => setSelectedAction(e.target.value)}
-              title="Aksi"
-            >
-              <option value="chat">Tanya AI</option>
-              <option value="compress">Kompresi</option>
-              <option value="convert">Konversi</option>
-            </select>
+            <div className="dropdown me-2">
+              <button 
+                className="btn miruro-file-action-select text-start d-flex justify-content-between align-items-center" 
+                type="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false"
+                style={{ width: '120px' }}
+              >
+                {selectedAction === 'chat' ? 'Tanya AI' : selectedAction === 'compress' ? 'Kompresi' : 'Konversi'}
+              </button>
+              <ul className="dropdown-menu dropdown-menu-dark shadow-lg border-0 rounded-4 p-2" style={{ background: 'rgba(36, 38, 43, 0.95)', backdropFilter: 'blur(10px)', minWidth: '150px' }}>
+                <li><button className={`dropdown-item rounded-3 mb-1 miruro-dropdown-item ${selectedAction === 'chat' ? 'active bg-primary' : ''}`} type="button" onClick={() => setSelectedAction('chat')}>Tanya AI</button></li>
+                <li><button className={`dropdown-item rounded-3 mb-1 miruro-dropdown-item ${selectedAction === 'compress' ? 'active bg-primary' : ''}`} type="button" onClick={() => setSelectedAction('compress')}>Kompresi</button></li>
+                <li><button className={`dropdown-item rounded-3 miruro-dropdown-item ${selectedAction === 'convert' ? 'active bg-primary' : ''}`} type="button" onClick={() => setSelectedAction('convert')}>Konversi</button></li>
+              </ul>
+            </div>
 
             {selectedAction === 'compress' && (
-              <select 
-                className="form-select form-select-sm bg-dark text-white border-secondary rounded-pill me-2" 
-                style={{ width: '80px', fontSize: '0.8rem' }}
-                value={selectedQuality}
-                onChange={(e) => setSelectedQuality(e.target.value)}
-                title="Kualitas Kompresi"
-              >
-                <option value="25">25%</option>
-                <option value="50">50%</option>
-                <option value="75">75%</option>
-              </select>
+              <div className="dropdown me-2">
+                <button 
+                  className="btn miruro-file-action-select text-start d-flex justify-content-between align-items-center" 
+                  type="button" 
+                  data-bs-toggle="dropdown" 
+                  aria-expanded="false"
+                  style={{ width: '90px' }}
+                >
+                  {selectedQuality}%
+                </button>
+                <ul className="dropdown-menu dropdown-menu-dark shadow-lg border-0 rounded-4 p-2" style={{ background: 'rgba(36, 38, 43, 0.95)', backdropFilter: 'blur(10px)', minWidth: '100px' }}>
+                  <li><button className={`dropdown-item rounded-3 mb-1 miruro-dropdown-item ${selectedQuality === '25' ? 'active bg-primary' : ''}`} type="button" onClick={() => setSelectedQuality('25')}>25%</button></li>
+                  <li><button className={`dropdown-item rounded-3 mb-1 miruro-dropdown-item ${selectedQuality === '50' ? 'active bg-primary' : ''}`} type="button" onClick={() => setSelectedQuality('50')}>50%</button></li>
+                  <li><button className={`dropdown-item rounded-3 miruro-dropdown-item ${selectedQuality === '75' ? 'active bg-primary' : ''}`} type="button" onClick={() => setSelectedQuality('75')}>75%</button></li>
+                </ul>
+              </div>
             )}
 
             <button 
               type="button" 
-              className="btn-close btn-close-white ms-1" 
-              style={{ fontSize: '0.6rem' }}
+              className="btn-close btn-close-white ms-2" 
+              style={{ fontSize: '0.7rem', opacity: 0.7 }}
+              onMouseEnter={(e) => e.target.style.opacity = 1}
+              onMouseLeave={(e) => e.target.style.opacity = 0.7}
               onClick={() => {
                 setSelectedFile(null);
                 if (fileInputRef.current) fileInputRef.current.value = '';
